@@ -8,7 +8,7 @@ const moment = require("moment");
 var configMySql = {
   host: "localhost",
   user: "root",
-  password: "Logkit056",
+  password: "",
   database: "mydb",
 };
 
@@ -56,7 +56,7 @@ app.post("/reg_user", (req, res) => {
         if (err) throw err;
         if (result.length == 0) {
           sql =
-            "INSERT INTO user (username, password, firstName, LastName, gender) VALUES ('" +
+            "INSERT INTO user (username, password, firstName, lastName, gender) VALUES ('" +
             username +
             "','" +
             password +
@@ -120,7 +120,7 @@ app.post("/login_user", (req, res) => {
             const token = {
               username: result[0].username,
               firstName: result[0].firstName,
-              lastName: result[0].LastName,
+              lastName: result[0].lastName,
               gender: result[0].gender,
             };
             res.status(200).json(token);
@@ -212,7 +212,7 @@ app.put("/user/:username", (req, res) => {
       var sql =
         "UPDATE user SET firstName = '" +
         firstName +
-        "', LastName = '" +
+        "', lastName = '" +
         lastName +
         "' WHERE username = '" +
         username +
