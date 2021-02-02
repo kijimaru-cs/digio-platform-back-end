@@ -3,9 +3,6 @@ var cors = require("cors");
 const app = express();
 var mysql = require("mysql");
 const moment = require("moment");
-var sqlinjection = require("sql-injection");
-
-app.use(sqlinjection);
 
 const pool = mysql.createPool({
   host: "us-cdbr-east-03.cleardb.com",
