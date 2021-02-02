@@ -94,11 +94,8 @@ app.post("/login_user", (req, res) => {
     const username = req.body.username.username;
     const password = req.body.password.password;
     pool.query(
-      "SELECT * FROM user WHERE username ='" +
-        username +
-        "' AND password = '" +
-        password +
-        "'",
+      "SELECT * FROM user WHERE username =? AND password = ?",
+      [username, password],
       function (err, result, fields) {
         if (err) throw err;
         recordLogin(username, password);
@@ -124,7 +121,8 @@ app.post("/login_user", (req, res) => {
 app.get("/user/:username", (req, res) => {
   const username = req.params.username;
   pool.query(
-    "SELECT * FROM user_login WHERE username = '" + username + "'",
+    "SELECT * FROM user_login WHERE username = ?",
+    [username],
     function (err, result, fields) {
       if (err) throw err;
       res.send(result);
@@ -135,11 +133,10 @@ app.get("/user/:username", (req, res) => {
 function recordLogin(username, password) {
   const timeNow = moment().format("YYYY-MM-DD,HH:mm:ss");
   var sql =
-    "SELECT * FROM user WHERE username ='" +
-    username +
-    "' AND password = '" +
-    password +
-    "'";
+    "SELECT * FROM user WHERE username =" +
+    pool.escape(username) +
+    " AND password = " +
+    pool.escape(password);
   pool.query(sql, function (err, result, fields) {
     if (err) throw err;
     if (result.length == 1) {
@@ -178,13 +175,12 @@ app.put("/user/:username", (req, res) => {
     const firstName = req.body.editFirstName;
     const lastName = req.body.editLastName;
     var sql =
-      "UPDATE user SET firstName = '" +
-      firstName +
-      "', lastName = '" +
-      lastName +
-      "' WHERE username = '" +
-      username +
-      "'";
+      "UPDATE user SET firstName = " +
+      pool.escape(firstName) +
+      ", lastName = " +
+      pool.escape(lastName) +
+      " WHERE username = " +
+      pool.escape(username);
     pool.query(sql, function (err, result) {
       if (err) throw err;
       res.send({ error: false, message: "update Complete" });
